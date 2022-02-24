@@ -1,0 +1,16 @@
+.pokemonlist_container{
+  height: 80vh;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.pokemonlist_card {
+  align-items: center;
+  width: 15vw;
+  height: 20vh;
+}
+
+.pokemon_image{
+  width: 15vh;
+}
