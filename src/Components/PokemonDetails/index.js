@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import './styles.css'
 
 function PokemonDetails() {
   const pokemonDetails = useSelector(store => store.pokedex.details)
@@ -9,16 +10,16 @@ function PokemonDetails() {
   const error = useSelector(store => store.pokedex.error)
 
   return (
-    <div className="d-flex flex-column border border-dark p-5">
+    <div className="d-flex flex-column">
     { loading === true && (
     <div className="d-flex justify-content-center m-3">
         <div className="spinner-border" role="status" />
     </div>
   )}
     { pokemonDetails.name && (
-        <div className="d-flex flex-column">
+        <div className="d-flex flex-column align-items-center">
             <h1>{pokemonDetails.name}</h1>
-            <img className="pokemon_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonDetails.id}.png`} alt={pokemonDetails.name}/>
+            <img className="pokemon-details_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonDetails.id}.png`} alt={pokemonDetails.name}/>
             {pokemonDetails.types.map((types) =>(
               <span>{types.type.name}</span>
             ))}

@@ -44,15 +44,20 @@ function PokemonList() {
           <div className="spinner-border" role="status" />
         </div>
       )}
-      {pokemonList.map((pokemon, index) => (
-        <div className="pokemonlist_card d-flex flex-column border border-dark" key={pokemon.name}>
-          <span className="text-wrap">{pokemon.name}</span>
-          <img className="pokemon_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${newIndex(index)}.png`} alt={pokemon.name}/>
-          <div className="d-flex justify-content-evenly">
-            <Link to={`/details/${newIndex(index)}`} className="btn btn-dark" id={newIndex(index)} onClick={() => handleDetails(newIndex(index))}>Details</Link>
+      {loading === false && (
+      <>
+        {pokemonList.map((pokemon, index) => (
+          <div className="pokemon-card_container">
+            <Link to={`/details/${newIndex(index)}`} className="pokemonlist_card d-flex flex-column border border-dark" id={newIndex(index)} onClick={() => handleDetails(newIndex(index))} alt={pokemon.name}>
+              <img className="pokemon_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${newIndex(index)}.png`} alt={pokemon.name}/>
+              <div className="another_card">
+                <span className="pokemon-name text-wrap">{pokemon.name}</span>
+              </div>
+            </Link>
           </div>
-        </div>
-      ))}
+        ))}
+      </>
+      )}
       <div className="container d-flex justify-content-evenly p-2">
         { numberPage > 1 && loading === false && (
             <button className="btn btn-lg btn-dark" onClick={() => dispatch(decNum(numberPage))}>Prev Page</button>

@@ -5,12 +5,47 @@
   flex-wrap: wrap;
 }
 
-.pokemonlist_card {
-  align-items: center;
-  width: 15vw;
-  height: 20vh;
+.pokemon-card_container{
+  margin: 1vh 6vh;
 }
 
-.pokemon_image{
+.pokemon-card_container, .pokemonlist_card, .another_card {
+  width: 15.5vh;
+  height: 15.5vh;
+}
+
+.pokemon-card_container:hover .pokemonlist_card {
+  transform: rotateY(180deg);
+}
+
+.pokemonlist_card {
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  transition: transform 1s;
+  transform-style: preserve-3d;
+}
+
+.pokemon_image {
   width: 15vh;
+}
+
+.pokemon_image, .another_card {
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.another_card {
+  border-radius: 100%;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  display: flex;
+  background-color: aquamarine;
+  transform: rotateY(180deg);
+}
+
+.pokemon-name {
+  text-transform: capitalize;
 }
