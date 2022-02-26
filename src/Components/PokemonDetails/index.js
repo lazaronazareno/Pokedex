@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './styles.css'
+import pokemonType from '../../Assets/pokemontypes'
 
 function PokemonDetails() {
   const pokemonDetails = useSelector(store => store.pokedex.details)
@@ -19,14 +20,32 @@ function PokemonDetails() {
     { pokemonDetails.name && (
         <div className="d-flex flex-column align-items-center">
             <h1>{pokemonDetails.name}</h1>
-            <img className="pokemon-details_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonDetails.id}.png`} alt={pokemonDetails.name}/>
-            {pokemonDetails.types.map((types) =>(
-              <span>{types.type.name}</span>
-            ))}
-            {pokemonDetails.stats.map((stats) =>(
-              <span>{stats.stat.name} : {stats.base_stat}</span>
-            ))}
-            
+            <div className="pokemon-infograph d-flex">
+              <div className="d-flex">
+                {pokemonDetails.types.map((types) =>(
+                  <img src={pokemonType[types.type.name]}/>
+                  ))}
+              </div>
+              <img className="pokemon-details_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonDetails.id}.png`} alt={pokemonDetails.name}/>
+              <div>
+                <span>Strong</span>
+                <span>WeaK</span>
+              </div>
+            </div>
+            <div>
+              <span>Base Stats</span>
+              {pokemonDetails.stats.map((stats) =>(
+                <div>
+                  <span>{stats.stat.name} : {stats.base_stat}</span>
+                  <meter                   
+                  min="0" 
+                  max='255'
+                  value={stats.base_stat}>
+                    {stats.stat.name}
+                  </meter>
+                </div>
+              ))}
+            </div>
             <Link to="/" className="btn btn-dark">Back</Link>
         </div>
     )}

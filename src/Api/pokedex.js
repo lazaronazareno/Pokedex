@@ -33,6 +33,9 @@ const pokedexApi = {
     },
     getPokemonImage(id) {
       return callApi(`/pokemon-form/${id}`)
+    },
+    getTypeRelation(name) {
+      return callApi(`/type/${name}`)
     }
   },
 };
