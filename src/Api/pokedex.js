@@ -31,6 +31,9 @@ const pokedexApi = {
     getPokemonById(id) {
         return callApi(`/pokemon/${id}`)
     },
+    getPokemonDescription(id) {
+        return callApi(`/pokemon-species/${id}`)
+    },
     getPokemonImage(id) {
       return callApi(`/pokemon-form/${id}`)
     },

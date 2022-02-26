@@ -1,6 +1,30 @@
+span {
+  text-transform: capitalize;
+}
+
+.pokemon-infograph {
+  width: 80vw;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
 .pokemon-type_img{
   height: 5vh;
 }
+
 .pokemon-details_image {
   width: 30vh;
+}
+
+.weakness-container {
+  width: 20vw;
+}
+
+.pokemon-stats{
+  display: flex;
+  justify-content: space-between;
+}
+
+.green {
+  background-color: lightgreen;
 }

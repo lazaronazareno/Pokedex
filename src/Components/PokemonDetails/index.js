@@ -8,7 +8,7 @@ function PokemonDetails() {
   const [pokemonWeak, setWeak] = useState()
   const [pokemonStrong, setStrong] = useState()
   const pokemonDetails = useSelector(store => store.pokedex.pokemonDetails)
-  console.log(pokemonDetails)
+  const pokemonDescription = useSelector(store => store.pokedex.pokemonDescription)
   const loading = useSelector(store => store.pokedex.loading)
   const error = useSelector(store => store.pokedex.error)
 
@@ -63,16 +63,16 @@ function PokemonDetails() {
     { pokemonDetails.name && loading === false && (
         <div className="d-flex flex-column align-items-center">
             <h1>{pokemonDetails.name}</h1>
-            <div className="pokemon-infograph d-flex">
+            <div className={`pokemon-infograph d-flex ${pokemonDescription.color.name}`}>
               <div className="d-flex flex-column">
                 {pokemonDetails.types.map((types) =>(
                   <img className="pokemon-type_img" src={pokemonType[types.type.name].img}/>
                   ))}
               </div>
               <img className="pokemon-details_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonDetails.id}.png`} alt={pokemonDetails.name}/>
-              <div>
-                <span>strong against</span>
-                <div className="d-flex">
+              <div className="weakness-container d-flex flex-column">
+                <h1>Strong against</h1>
+                <div className="d-flex flex-wrap">
                   {!pokemonStrong && (
                   <div className="d-flex justify-content-center m-3">
                     <div className="spinner-border" role="status" />
@@ -84,8 +84,8 @@ function PokemonDetails() {
                     ))
                   )}
                 </div>
-                <span>weak against</span>
-                <div className="d-flex">
+                <h1>Weak against</h1>
+                <div className="d-flex flex-wrap">
                   {!pokemonWeak && (
                   <div className="d-flex justify-content-center m-3">
                     <div className="spinner-border" role="status" />
@@ -100,9 +100,9 @@ function PokemonDetails() {
               </div>
             </div>
             <div>
-              <span>Base Stats</span>
+              <h1>Base Stats</h1>
               {pokemonDetails.stats.map((stats) =>(
-                <div>
+                <div className="pokemon-stats">
                   <span>{stats.stat.name} : {stats.base_stat}</span>
                   <meter                   
                   min="0" 
@@ -112,6 +112,9 @@ function PokemonDetails() {
                   </meter>
                 </div>
               ))}
+            </div>
+            <div>
+              <span>{pokemonDescription.flavor_text_entries[0].flavor_text}</span>
             </div>
             <Link to="/" className="btn btn-warning">Back</Link>
         </div>

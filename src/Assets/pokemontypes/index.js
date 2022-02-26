@@ -94,7 +94,7 @@ const types = {
     img: normal,
     name: 'normal',
     weak: ['fighting'],
-    strong: []
+    strong: ['ghost']
   },
   poison:{
     img: poison,
