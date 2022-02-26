@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPokemons, isLoading, sumNum, decNum, getDetails } from '../../Redux/reducers';
+import { getPokemons, isLoading, sumNum, decNum, getDetails, getTypes } from '../../Redux/reducers';
 import './styles.css'
+import pokemonType from '../../Assets/pokemontypes'
 
 function PokemonList() {
   const dispatch = useDispatch();

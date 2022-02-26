@@ -4,6 +4,7 @@ const initialState = {
     "pokemonList" : [],
     "pokemonDetails" : [],
     "pokemonImages": [],
+    "typeRelations": [],
     "loading" : false,
     "error" : null,
     "numberPage" : 1,
@@ -12,6 +13,7 @@ const initialState = {
 const GET_POKEMONS = 'GET_POKEMONS';
 const GET_DETAILS = 'GET_DETAILS';
 const GET_IMAGE = 'GET_IMAGE';
+const GET_TYPERELATION = 'GET_TYPERELATION';
 const IS_LOADING = 'IS_LOADING';
 const SUM_NUM = 'SUM_NUM';
 const DEC_NUM = 'DEC_NUM';
@@ -30,7 +32,6 @@ export default function reducer (state = initialState, action) {
             return {
                 ...state,
                 pokemonList : action.payload,
-                details : [],
                 loading: false,
             }
         }
@@ -44,7 +45,7 @@ export default function reducer (state = initialState, action) {
         } else {
             return {
                 ...state,
-                details : action.payload,
+                pokemonDetails : action.payload,
                 loading: false,
             }
         }
@@ -52,6 +53,11 @@ export default function reducer (state = initialState, action) {
             return {
                 ...state,
                 pokemonImages: action.payload,
+            }
+        case GET_TYPERELATION :
+            return {
+                ...state,
+                typeRelations: action.payload,
             }
         case IS_LOADING :
             return {
@@ -114,6 +120,21 @@ export const getImage = (id) => async (dispatch, getState) => {
     } catch (error) {
         dispatch ({
             type: GET_IMAGE,
+            payload: error,
+        })
+    }
+}
+
+export const getTypes = (name) => async (dispatch, getState) => {
+    try {
+        const data = await api.pokedex.getTypeRelation(name)
+        dispatch({
+            type : GET_TYPERELATION,
+            payload : data,
+        })
+    } catch (error) {
+        dispatch ({
+            type: GET_TYPERELATION,
             payload: error,
         })
     }
