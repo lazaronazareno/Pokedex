@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addMyPokemon } from '../../Redux/reducers';
 import { Link } from 'react-router-dom';
-import './styles.css'
+import './styles.scss'
+import '../../Assets/color.scss'
 import pokemonType from '../../Assets/pokemontypes'
 
 function PokemonDetails() {
+  const dispatch = useDispatch();
+
   const [pokemonWeak, setWeak] = useState()
   const [pokemonStrong, setStrong] = useState()
   const pokemonDetails = useSelector(store => store.pokedex.pokemonDetails)
@@ -49,6 +53,7 @@ function PokemonDetails() {
     return () => {
       clearTimeout(time);
     };
+// eslint-disable-next-line
   }, [pokemonDetails])
 
 
@@ -66,7 +71,7 @@ function PokemonDetails() {
             <div className={`pokemon-infograph d-flex ${pokemonDescription.color.name}`}>
               <div className="d-flex flex-column">
                 {pokemonDetails.types.map((types) =>(
-                  <img className="pokemon-type_img" src={pokemonType[types.type.name].img}/>
+                  <img className="pokemon-type_img" src={pokemonType[types.type.name].img} key={types.type.name} alt={types.type.name}/>
                   ))}
               </div>
               <img className="pokemon-details_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonDetails.id}.png`} alt={pokemonDetails.name}/>
@@ -80,7 +85,7 @@ function PokemonDetails() {
                   )}
                   { pokemonStrong && (
                     pokemonStrong.map((types) =>(
-                      <img className="pokemon-type_img" src={pokemonType[types].img}/>
+                      <img className="pokemon-type_img" src={pokemonType[types].img} alt={pokemonType[types].name}/>
                     ))
                   )}
                 </div>
@@ -93,30 +98,34 @@ function PokemonDetails() {
                   )}
                   { pokemonWeak && (
                     pokemonWeak.map((types) =>(
-                      <img className="pokemon-type_img" src={pokemonType[types].img}/>
+                      <img className="pokemon-type_img" src={pokemonType[types].img} alt={pokemonType[types].name}/>
                     ))
                   )}
                 </div>
               </div>
             </div>
-            <div>
-              <h1>Base Stats</h1>
-              {pokemonDetails.stats.map((stats) =>(
-                <div className="pokemon-stats">
-                  <span>{stats.stat.name} : {stats.base_stat}</span>
-                  <meter                   
-                  min="0" 
-                  max='255'
-                  value={stats.base_stat}>
-                    {stats.stat.name}
-                  </meter>
-                </div>
-              ))}
+            <div className="pokemon-stats-info d-flex">
+              <div className="pokemon-stats d-flex flex-column">
+                <h1>Base Stats</h1>
+                {pokemonDetails.stats.map((stats) =>(
+                  <div className="pokemon-meter d-flex justify-content-between">
+                    <span>{stats.stat.name} : {stats.base_stat}</span>
+                    <meter                   
+                    min="0" 
+                    max='255'
+                    value={stats.base_stat}>
+                      {stats.stat.name}
+                    </meter>
+                  </div>
+                ))}
+              </div>
+            <div className="pokemon-info d-flex flex-column">
+              <span>{pokemonDescription.flavor_text_entries[1].flavor_text}</span>
+              <button onClick={() => dispatch(addMyPokemon(pokemonDetails))}>add</button>
+              <button>fight</button>
             </div>
-            <div>
-              <span>{pokemonDescription.flavor_text_entries[0].flavor_text}</span>
             </div>
-            <Link to="/" className="btn btn-warning">Back</Link>
+            <Link to="/pokedex" className="btn btn-warning">Back</Link>
         </div>
     )}
     {error && (
@@ -125,7 +134,7 @@ function PokemonDetails() {
     {(!pokemonDetails) && (loading === false) && (
       <>
         <h1>Error: Pokemon not Found</h1>
-        <Link to='/' className="btn btn-dark btn-lg">Back</Link>
+        <Link to='/pokedex' className="btn btn-dark btn-lg">Back</Link>
       </>
     )}
 </div>

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPokemons, isLoading, sumNum, decNum, getDetails, getDescription } from '../../Redux/reducers';
 import './styles.css'
-import pokemonType from '../../Assets/pokemontypes'
 
 function PokemonList() {
   const dispatch = useDispatch();
@@ -35,30 +34,34 @@ function PokemonList() {
 
     let handleDetails = (id) => {
       dispatch(isLoading())
-      dispatch(getDetails(id))
       dispatch(getDescription(id))
+      dispatch(getDetails(id))
   }
 
   return (
-    <div className="pokemonlist_container">
+    <div className="">
       {loading === true && (
         <div className="d-flex justify-content-center m-3">
           <div className="spinner-border" role="status" />
         </div>
       )}
       {loading === false && (
-      <>
-        {pokemonList.map((pokemon, index) => (
-          <div className="pokemon-card_container">
-            <Link to={`/details/${newIndex(index)}`} className="pokemonlist_card d-flex flex-column border border-dark" id={newIndex(index)} onClick={() => handleDetails(newIndex(index))} alt={pokemon.name}>
-              <img className="pokemon_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${newIndex(index)}.png`} alt={pokemon.name}/>
-              <div className="another_card">
-                <span className="pokemon-name text-wrap">{pokemon.name}</span>
-              </div>
-            </Link>
-          </div>
-        ))}
-      </>
+      <div>
+        <h1>Pokemon List</h1>
+        <div className="pokemonlist_container">
+          {pokemonList.map((pokemon, index) => (
+            <div className="pokemon-card_container" key={pokemon.name}>
+              <Link to={`/details/${newIndex(index)}`} className="pokemonlist_card d-flex flex-column border border-dark" id={newIndex(index)} onClick={() => handleDetails(newIndex(index))} alt={pokemon.name}>
+                <img className="pokemon_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${newIndex(index)}.png`} alt={pokemon.name}/>
+                <div className="another_card">
+                  <span className="pokemon-name text-wrap">{pokemon.name}</span>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+        <Link to='/' className="btn btn-dark btn-lg">Back</Link>
+      </div>
       )}
       <div className="container d-flex justify-content-evenly p-2">
         { numberPage > 1 && loading === false && (

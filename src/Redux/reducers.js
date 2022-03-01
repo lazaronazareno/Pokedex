@@ -5,6 +5,11 @@ const initialState = {
     "pokemonDetails" : [],
     "pokemonDescription" : [],
     "typeRelations": [],
+    "searchPokemonList": [],
+    "myTeam" : [],
+    "myPokemon" : [],
+    "enemyTeam" : [],
+    "enemyPokemon" : [],
     "loading" : false,
     "error" : null,
     "numberPage" : 1,
@@ -14,9 +19,15 @@ const GET_POKEMONS = 'GET_POKEMONS';
 const GET_DETAILS = 'GET_DETAILS';
 const GET_DESCRIPTION = 'GET_DESCRIPTION';
 const GET_TYPERELATION = 'GET_TYPERELATION';
+const SEARCH_POKEMON = 'SEARCH_POKEMON';
+const ADDTO_MYTEAM = 'ADDTO_MYTEAM';
+const ADDTO_MYPOKEMON = 'ADDTO_MYPOKEMON';
+const ADDTO_ENEMYTEAM = 'ADDTO_ENEMYTEAM';
+const ADDTO_ENEMYPOKEMON = 'ADDTO_ENEMYPOKEMON';
 const IS_LOADING = 'IS_LOADING';
 const SUM_NUM = 'SUM_NUM';
 const DEC_NUM = 'DEC_NUM';
+const ERASE_STATE = 'ERASE_STATE';
 
 export default function reducer (state = initialState, action) {
     console.log(action)
@@ -45,7 +56,7 @@ export default function reducer (state = initialState, action) {
         } else {
             return {
                 ...state,
-                pokemonDetails : action.payload,
+                pokemonDetails : action.payload || state.pokemonDetails,
                 loading: false,
             }
         }
@@ -70,6 +81,43 @@ export default function reducer (state = initialState, action) {
                 ...state,
                 typeRelations: action.payload,
             }
+        case SEARCH_POKEMON :
+            if(action.payload.message) {
+                return {
+                    ...state,
+                    error: 'Error : Pokemon Not Found',
+                    searchPokemonList : [],
+                    loading: false
+                }
+            }else {
+                return {
+                    ...state,
+                    searchPokemonList : action.payload,
+                    error: null,
+                    loading: false
+                }
+            }
+        case ADDTO_MYPOKEMON :
+            return {
+                ...state,
+                myPokemon: action.payload,
+            }
+
+        case ADDTO_MYTEAM :
+            return {
+                ...state,
+                myTeam: action.payload,
+            }
+        case ADDTO_ENEMYPOKEMON :
+            return {
+                ...state,
+                enemyPokemon: action.payload,
+            }
+        case ADDTO_ENEMYTEAM :
+            return {
+                ...state,
+                enemyTeam: action.payload,
+            }
         case IS_LOADING :
             return {
                 ...state,
@@ -86,6 +134,17 @@ export default function reducer (state = initialState, action) {
                 ...state,
                 pokemonList:[],
                 numberPage : action.payload
+            }
+        case ERASE_STATE :
+            return {
+                pokemonList : [],
+                pokemonDetails : [],
+                pokemonDescription : [],
+                typeRelations : [],
+                searchPokemonList : [],
+                loading : false,
+                error : null,
+                numberPage : 1,
             }
         default:
             return state;
@@ -152,6 +211,28 @@ export const getTypes = (name) => async (dispatch, getState) => {
     }
 }
 
+export const searchPokemon = (name) => async (dispatch, getState) => {
+    try {
+        const data = await api.pokedex.getPokemonById(name)
+        dispatch({
+            type: SEARCH_POKEMON,
+            payload : data,
+        })
+      } catch (error) {
+        dispatch({
+            type: SEARCH_POKEMON,
+            payload : error,
+        })
+      }
+}
+
+export const addMyPokemon = (pokemon) => (dispatch, getState) => {
+    dispatch({
+        type : ADDTO_MYPOKEMON,
+        payload : pokemon
+    })
+}
+
 export const isLoading = () => (dispatch, getState) => {
     dispatch({
         type: IS_LOADING,
@@ -172,3 +253,11 @@ export const decNum = (num) => (dispatch, getState) => {
         payload : num - 1
     })
 }
+
+export const eraseState = () => (dispatch, getState) => {
+    dispatch({
+        type: ERASE_STATE,
+        payload : 'State deleted'
+    })
+}
+
