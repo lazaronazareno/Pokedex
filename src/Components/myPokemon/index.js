@@ -19,7 +19,7 @@ function MyPokemon() {
             <img className="pokemon-type_img" src={pokemonType[types.type.name].img} key={types.type.name} alt={types.type.name}/>
           ))}
           {myPokemon.stats.map((stats) =>(
-            <div className="pokemon-meter d-flex justify-content-between">
+            <div className="pokemon-meter d-flex justify-content-between" key={stats.stat.name}>
               <span>{stats.stat.name} : {stats.base_stat}</span>
               <meter                   
               min="0" 
@@ -29,7 +29,7 @@ function MyPokemon() {
               </meter>
             </div>
           ))}
-          {!enemyPokemon && (
+          {!enemyPokemon.name && (
             <Link to="/" onClick={() => dispatch(eraseState())} className="btn btn-primary">Back</Link>
           )}
         </div>

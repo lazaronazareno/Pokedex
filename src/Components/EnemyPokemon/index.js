@@ -12,7 +12,7 @@ function EnemyPokemon() {
       {loading === true && (
         <Spinner />
       )}
-      {enemyPokemon.name && (
+      {enemyPokemon.name && !loading && (
         <div>
           <img className="my-pokemon-img" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${enemyPokemon.id}.png`} alt={enemyPokemon.name}/>
           <h1 className="pokemon-name">{enemyPokemon.name}</h1>
@@ -20,7 +20,7 @@ function EnemyPokemon() {
             <img className="pokemon-type_img" src={pokemonType[types.type.name].img} key={types.type.name} alt={types.type.name}/>
           ))}
           {enemyPokemon.stats.map((stats) =>(
-            <div className="pokemon-meter d-flex justify-content-between">
+            <div className="pokemon-meter d-flex justify-content-between" key={stats.stat.name}>
               <span>{stats.stat.name} : {stats.base_stat}</span>
               <meter                   
               min="0" 

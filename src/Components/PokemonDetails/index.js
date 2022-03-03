@@ -14,6 +14,7 @@ function PokemonDetails() {
   const [pokemonStrong, setStrong] = useState()
   const pokemonDetails = useSelector(store => store.pokedex.pokemonDetails)
   const pokemonDescription = useSelector(store => store.pokedex.pokemonDescription)
+  const myPokemon = useSelector(store => store.pokedex.myPokemon)
   const loading = useSelector(store => store.pokedex.loading)
   const error = useSelector(store => store.pokedex.error)
 
@@ -32,8 +33,6 @@ function PokemonDetails() {
         const totalStrong = strong[0].concat(strong[1]).filter(val => !type.includes(val))
         let diffWeak = totalWeak.filter(val => !totalStrong.includes(val));
         let diffStrong = totalStrong.filter(val => !totalWeak.includes(val));
-        console.log(diffStrong)
-        console.log(diffWeak)
         diffStrong = [...new Set(diffStrong)]
         diffWeak = [...new Set(diffWeak)]
         return (setStrong(diffStrong),
@@ -41,8 +40,7 @@ function PokemonDetails() {
       } else {
         const totalWeak = weak[0]
         const totalStrong = strong[0]
-        console.log(totalWeak)
-        console.log(totalStrong)
+
         return (setStrong(totalStrong),
         setWeak(totalWeak))
       }
@@ -120,7 +118,9 @@ function PokemonDetails() {
             <div className="pokemon-info d-flex flex-column">
               <span>{pokemonDescription.flavor_text_entries[1].flavor_text}</span>
               <button className="btn btn-primary" onClick={() => dispatch(addMyPokemon(pokemonDetails))}>add</button>
-              <Link to="/fight" className="btn btn-primary" onClick={() => handleFight(pokemonDetails)}>fight</Link>
+              {myPokemon.name && (
+                <Link to="/fight" className="btn btn-primary" onClick={() => handleFight(pokemonDetails)}>fight</Link>
+              )}
             </div>
             </div>
             <Link to="/pokedex" onClick={() => dispatch(eraseState())} className="btn btn-primary">Back</Link>
@@ -129,7 +129,7 @@ function PokemonDetails() {
     {error && (
         <h1>{error}</h1>
     )}
-    {(!pokemonDetails) && (loading === false) && (
+    {(!pokemonDetails.name) && (loading === false) && (
       <>
         <h1>Error: Pokemon not Found</h1>
         <Link to='/pokedex' className="btn btn-dark btn-lg">Back</Link>

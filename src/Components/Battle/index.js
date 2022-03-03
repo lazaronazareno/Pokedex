@@ -1,10 +1,11 @@
-import React, { useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { eraseState, isLoading } from '../../Redux/reducers';
+import { eraseState, isLoading, addEnemyPokemon } from '../../Redux/reducers';
 import { Link } from 'react-router-dom';
 import EnemyPokemon from '../EnemyPokemon'
 import MyPokemon from '../myPokemon'
 import pokemonType from '../../Assets/pokemontypes'
+import Fight from './fight';
 
 function Battle() {
   const dispatch = useDispatch();
@@ -14,13 +15,12 @@ function Battle() {
   const [isWeak, setIsWeak] = useState(false)
   const [isLucky, setIsLucky] = useState(false)
   const [results, setResults] = useState(null)
-  const [victory, setVictory] = useState(false)
+  const [showHow, setShowHow] = useState(false)
+  const [buttonText, setButtonText] = useState('Fight')
   const myPokemon = useSelector(store => store.pokedex.myPokemon)
   const enemyPokemon = useSelector(store => store.pokedex.enemyPokemon)
-  const loading = useSelector(store => store.pokedex.loading)
   
     function sumMyStats() {
-      dispatch(isLoading(true))
       let myPokemonStats = []
       let myStats = []
       myPokemon.stats.map((stats) =>(
@@ -34,18 +34,15 @@ function Battle() {
       myStats.push(myRandomStat) 
       const mySum = myStats.reduce((partialSuma, b) => partialSuma + b, 0)
 
-      console.log(mySum)
       return setMyTotalStats(mySum)
     }
 
     function sumEnemyStats() {
       let enemyPokemonStats = []
       let enemyStats = []
-
       enemyPokemon.stats.map((stats) =>(
         enemyPokemonStats.push(stats.base_stat)
     ))
-    
       let enemyHp = enemyPokemonStats.splice(0,1)
       let enemySpeed = enemyPokemonStats.splice(-1,1)
       let enemyRandomStat = enemyPokemonStats[Math.floor(Math.random() * enemyPokemonStats.length)];
@@ -54,7 +51,6 @@ function Battle() {
       enemyStats.push(enemyRandomStat) 
       const enemySum = enemyStats.reduce((partialSum, a) => partialSum + a, 0)
 
-      console.log(enemySum)
       return setEnemyTotalStats(enemySum)
     }
   
@@ -75,24 +71,23 @@ function Battle() {
       if(strong.length > 1){
         let totalWeak = weak[0].concat(weak[1]).filter(val => !myType.includes(val))
         let totalStrong = strong[0].concat(strong[1]).filter(val => !myType.includes(val))
+        console.log(totalWeak)
+        console.log(totalStrong)
         totalWeak = [...new Set(totalWeak)]
         totalStrong = [...new Set(totalStrong)]
-        console.log(totalStrong)
         console.log(totalWeak)
-        console.log(enemyType)
+        console.log(totalStrong)
         let resultStrong = totalStrong.includes(enemyType[0] || enemyType[1])
         let resultWeak = totalWeak.includes(enemyType[0] || enemyType[1])
-        console.log('es mas fuerte? : ', resultStrong)
-        console.log('es mas debil? : ', resultWeak)
+        console.log(resultStrong)
+        console.log(resultWeak)
         return (setIsStrong(resultStrong), setIsWeak(resultWeak))
       } else {
         const totalStrong = strong[0]
         const totalWeak = weak[0]
-        console.log(totalStrong)
         let resultStrong = totalStrong.includes(enemyType[0])
         let resultWeak = totalWeak.includes(enemyType[0])
-        console.log('es mas fuerte? : ', resultStrong)
-        console.log('es mas debil? : ', resultWeak)
+
         return (setIsStrong(resultStrong), setIsWeak(resultWeak))
       }   
   }
@@ -104,53 +99,63 @@ function Battle() {
     const luckyNumber = [1, 7, 77]
     if (luckyNumber.includes(randomNumber)) {
       setIsLucky(true)
+      return true
     } else {
       setIsLucky(false)
+      return false
     }
   }
 
+  const showText = () => {
+    setShowHow(!showHow)
+  }
+
+  let handleOpponent = () => {
+    setButtonText('Fight')
+    dispatch(isLoading(true))
+    dispatch(addEnemyPokemon())
+}
+
   function fight() {
+    setButtonText('Try Again')
     sumMyStats()
     sumEnemyStats()
-    dispatch(isLoading(false))
     strong()
     lucky()
     if(isStrong && isLucky) {
-      dispatch(isLoading(false))
-      setResults('Your Pokemon type is favorable(+20) and got lucky!!!(+50)')
+      setResults('Your Pokemon type is favorable and got lucky!!!')
       let bonus = 70
       setMyTotalStats(myTotalStats => myTotalStats + bonus)
-      setVictory(myTotalStats > enemyTotalStats)
     } else if (isWeak && isLucky) {
-      dispatch(isLoading(false))
-      setResults('Your Pokemon type is unfavorable(-20) but got lucky!!!(+50)')
+      setResults('Your Pokemon type is unfavorable but got lucky!!!')
       let bonus = 30
       setMyTotalStats(myTotalStats => myTotalStats + bonus)
-      setVictory(myTotalStats > enemyTotalStats)
     } else if (isLucky) {
-      dispatch(isLoading(false))
-      setResults('Your Pokemon got lucky!!!(+50)')
+      setResults('Your Pokemon got lucky!!!')
       let bonus = 50
       setMyTotalStats(myTotalStats => myTotalStats + bonus)
-      setVictory(myTotalStats > enemyTotalStats)
     } else if (isStrong) {
-      dispatch(isLoading(false))
-      setResults('Your Pokemon type is favorable!(+20)')
+      setResults('Your Pokemon type is favorable!')
       let bonus = 20
       setMyTotalStats(myTotalStats => myTotalStats + bonus)
-      setVictory(myTotalStats > enemyTotalStats)
     } else if (isWeak){
-      dispatch(isLoading(false))
-      setResults('Your Pokemon type is unfavorable!(-20)')
+      setResults('Your Pokemon type is unfavorable!')
       let bonus = 20
       setMyTotalStats(myTotalStats => myTotalStats - bonus)
-      setVictory(myTotalStats > enemyTotalStats)
     } else {
-      dispatch(isLoading(false))
-      setResults('Both Pokemons fight in the same conditions!(+0)')
-      setVictory(myTotalStats > enemyTotalStats)
+      setResults('Both fights in the same conditions!')
     }
   }
+
+  useEffect(() => {
+    if(enemyPokemon.name){
+      sumMyStats()
+      sumEnemyStats()
+      strong()
+      lucky()
+    }
+    return;
+  }, [enemyPokemon])
 
   return (
     <div>
@@ -161,15 +166,37 @@ function Battle() {
       </div>
       <div>
         <Link to="/" onClick={() => dispatch(eraseState())} className="btn btn-primary">Back</Link>
-        <button className="btn btn-primary" onClick={() => fight()}>fight</button>
-        {results && loading === false && (
-          <div>
-            <h1>{results}</h1>
-            <h1>Your Pokemon has {myTotalStats} of TotalPower</h1>
-            <h1>Enemy Pokemon has {enemyTotalStats} of TotalPower</h1>
-            <h1>{victory ? 'You Win!!' : 'You Lose!'}</h1>
+        <button className="btn btn-primary" onClick={() => fight()} data-bs-toggle="modal" data-bs-target="#exampleModal">{buttonText}</button>
+        <button className="btn btn-primary" onClick={() => handleOpponent()}>Change Opponent</button>
+        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">Results of the Fight</h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                <Fight
+                  results={results}
+                  myStats={myTotalStats}
+                  enemyStats={enemyTotalStats}
+                  pokemonName={myPokemon.name}
+                  enemyPokemonName={enemyPokemon.name}
+                  />
+                <div className="d-flex flex-column w-50">
+                  <button className="btn btn-primary" onClick={() => showText()}>How it works?</button>
+                    {showHow && (
+                      <span>Total Power of Pokemons is calculated based in three main Attributes and the Bonus.
+                        The first and second attributes are Hp and Speed but the third one is random among the remaining four.
+                        The bonus depends on the effectiveness of the type and if you are lucky. Effectivenes Type gives you +20 and luck +50.
+                        Lucky has a 3% chance of appearing.
+                      </span>
+                    )}
+                </div>
+              </div>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   )

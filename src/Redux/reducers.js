@@ -147,6 +147,7 @@ export default function reducer (state = initialState, action) {
                 pokemonDescription : [],
                 typeRelations : [],
                 searchPokemonList : [],
+                enemyPokemon: [],
                 loading : false,
                 error : null,
                 numberPage : 1,
