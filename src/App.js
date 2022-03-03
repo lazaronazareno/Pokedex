@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
+import Battle from './Components/Battle';
 import Home from './Components/Home'
 import MyPokemon from './Components/myPokemon';
 import PokemonDetails from './Components/PokemonDetails';
@@ -16,6 +17,7 @@ function App() {
             <Route exact path="/details/:id" element={<PokemonDetails />} />
             <Route exact path="/search" element={<Search />} />
             <Route exact path="/myPokemon" element={<MyPokemon />} />
+            <Route exact path="/fight" element={<Battle />} />
           </Routes>
         </BrowserRouter>
     </div>

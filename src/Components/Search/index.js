@@ -23,7 +23,7 @@ function Search() {
     
   let handleSubmit = async event => {
     event.preventDefault();
-    dispatch(isLoading())
+    dispatch(isLoading(true))
     dispatch(searchPokemon(form.search))
     };
 

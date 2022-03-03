@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPokemons, isLoading, sumNum, decNum, getDetails, getDescription } from '../../Redux/reducers';
-import './styles.css'
+import './styles.scss'
+import Spinner from '../Spinner';
 
 function PokemonList() {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ function PokemonList() {
   const numberPage = useSelector(store => store.pokedex.numberPage)
 
   useEffect(() => {
-    dispatch(isLoading())
+    dispatch(isLoading(true))
     dispatch(getPokemons(numberPage))
     return ;
 // eslint-disable-next-line
@@ -33,17 +34,15 @@ function PokemonList() {
     }
 
     let handleDetails = (id) => {
-      dispatch(isLoading())
       dispatch(getDescription(id))
+      dispatch(isLoading(true))
       dispatch(getDetails(id))
   }
 
   return (
     <div className="">
       {loading === true && (
-        <div className="d-flex justify-content-center m-3">
-          <div className="spinner-border" role="status" />
-        </div>
+        <Spinner />
       )}
       {loading === false && (
       <div>
@@ -62,6 +61,9 @@ function PokemonList() {
         </div>
         <Link to='/' className="btn btn-dark btn-lg">Back</Link>
       </div>
+      )}
+      {error && (
+        <h1>{error}</h1>
       )}
       <div className="container d-flex justify-content-evenly p-2">
         { numberPage > 1 && loading === false && (

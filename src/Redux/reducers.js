@@ -33,30 +33,32 @@ export default function reducer (state = initialState, action) {
     console.log(action)
     switch (action.type) {
         case GET_POKEMONS : 
-        if(action.payload.response === 'error') {
+        if(action.payload.message) {
             return {
                 ...state,
-                error : action.payload.error,
+                error : action.payload.message,
                 loading: false
             }
         } else {
             return {
                 ...state,
                 pokemonList : action.payload,
+                error: null,
                 loading: false,
             }
         }
         case GET_DETAILS : 
-        if(action.payload.response === 'error') {
+        if(action.payload.message) {
             return {
                 ...state,
-                error : action.payload.error,
+                error : 'Error, pls reload later',
                 loading: false
             }
         } else {
             return {
                 ...state,
                 pokemonDetails : action.payload || state.pokemonDetails,
+                error: null,
                 loading: false,
             }
         }
@@ -101,6 +103,7 @@ export default function reducer (state = initialState, action) {
             return {
                 ...state,
                 myPokemon: action.payload,
+                loading: false
             }
 
         case ADDTO_MYTEAM :
@@ -112,6 +115,7 @@ export default function reducer (state = initialState, action) {
             return {
                 ...state,
                 enemyPokemon: action.payload,
+                loading: false
             }
         case ADDTO_ENEMYTEAM :
             return {
@@ -137,6 +141,7 @@ export default function reducer (state = initialState, action) {
             }
         case ERASE_STATE :
             return {
+                ...state,
                 pokemonList : [],
                 pokemonDetails : [],
                 pokemonDescription : [],
@@ -233,10 +238,28 @@ export const addMyPokemon = (pokemon) => (dispatch, getState) => {
     })
 }
 
-export const isLoading = () => (dispatch, getState) => {
+export const addEnemyPokemon = () => async (dispatch, getState) => {
+    const min = Math.floor(1)
+    const max = Math.floor(555)
+    const randomNum = Math.floor(Math.random() * (max - min +1)) +min
+    try {
+        const data = await api.pokedex.getPokemonById(randomNum)
+        dispatch({
+            type : ADDTO_ENEMYPOKEMON,
+            payload : data,
+        })
+    } catch (error) {
+        dispatch ({
+            type: ADDTO_ENEMYPOKEMON,
+            payload: error,
+        })
+    }
+}
+
+export const isLoading = (trueFalse) => (dispatch, getState) => {
     dispatch({
         type: IS_LOADING,
-        payload : true
+        payload : trueFalse
     })
 }
 
