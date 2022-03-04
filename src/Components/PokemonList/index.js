@@ -34,8 +34,8 @@ function PokemonList() {
     }
 
     let handleDetails = (id) => {
-      dispatch(getDescription(id))
       dispatch(isLoading(true))
+      dispatch(getDescription(id))
       dispatch(getDetails(id))
   }
 

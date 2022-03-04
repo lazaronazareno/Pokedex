@@ -1,10 +1,12 @@
 import api from '../Api/pokedex'
+import pokemonType from '../Assets/pokemontypes'
 
 const initialState = {
     "pokemonList" : [],
     "pokemonDetails" : [],
     "pokemonDescription" : [],
-    "typeRelations": [],
+    "pokemonStrong": [],
+    "pokemonWeak": [],
     "searchPokemonList": [],
     "myTeam" : [],
     "myPokemon" : [],
@@ -68,7 +70,6 @@ export default function reducer (state = initialState, action) {
             return {
                 ...state,
                 error : action.payload.error,
-                loading: false
             }
         } else {
             return {
@@ -81,7 +82,9 @@ export default function reducer (state = initialState, action) {
         case GET_TYPERELATION :
             return {
                 ...state,
-                typeRelations: action.payload,
+                pokemonStrong: action.payload,
+                pokemonWeak: action.diffWeak || action.totalWeak,
+                loading : false
             }
         case SEARCH_POKEMON :
             if(action.payload.message) {
@@ -142,7 +145,6 @@ export default function reducer (state = initialState, action) {
         case ERASE_STATE :
             return {
                 ...state,
-                pokemonList : [],
                 pokemonDetails : [],
                 pokemonDescription : [],
                 typeRelations : [],
@@ -202,19 +204,36 @@ export const getDescription = (id) => async (dispatch, getState) => {
     }
 }
 
-export const getTypes = (name) => async (dispatch, getState) => {
-    try {
-        const data = await api.pokedex.getTypeRelation(name)
+export const getTypeRelation = (pokemon) => async (dispatch, getState) => {
+    let type = []
+    let weak = []
+    let strong = []
+  
+    pokemon.types.map((types) =>(
+      (type.push(pokemonType[types.type.name].name),
+      weak.push(pokemonType[types.type.name].weak),
+      strong.push(pokemonType[types.type.name].strong))
+      ))
+      if(weak.length > 1){
+        const totalWeak = weak[0].concat(weak[1]).filter(val => !type.includes(val))
+        const totalStrong = strong[0].concat(strong[1]).filter(val => !type.includes(val))
+        let diffWeak = totalWeak.filter(val => !totalStrong.includes(val));
+        let diffStrong = totalStrong.filter(val => !totalWeak.includes(val));
+        diffStrong = [...new Set(diffStrong)]
+        diffWeak = [...new Set(diffWeak)]
         dispatch({
             type : GET_TYPERELATION,
-            payload : data,
+            payload : diffStrong, diffWeak
         })
-    } catch (error) {
-        dispatch ({
-            type: GET_TYPERELATION,
-            payload: error,
+      } else {
+        const totalWeak = weak[0]
+        const totalStrong = strong[0]
+  
+        dispatch({
+            type : GET_TYPERELATION,
+            payload : totalStrong, totalWeak
         })
-    }
+      }
 }
 
 export const searchPokemon = (name) => async (dispatch, getState) => {

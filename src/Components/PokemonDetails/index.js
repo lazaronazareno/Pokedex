@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { addEnemyPokemon, addMyPokemon, eraseState, isLoading } from '../../Redux/reducers';
+import { addEnemyPokemon, addMyPokemon, eraseState, getTypeRelation, isLoading } from '../../Redux/reducers';
 import { Link } from 'react-router-dom';
 import './styles.scss'
 import '../../Assets/color.scss'
@@ -10,44 +10,15 @@ import Spinner from '../Spinner';
 function PokemonDetails() {
   const dispatch = useDispatch();
 
-  const [pokemonWeak, setWeak] = useState()
-  const [pokemonStrong, setStrong] = useState()
   const pokemonDetails = useSelector(store => store.pokedex.pokemonDetails)
   const pokemonDescription = useSelector(store => store.pokedex.pokemonDescription)
   const myPokemon = useSelector(store => store.pokedex.myPokemon)
+  const pokemonStrong = useSelector(store => store.pokedex.pokemonStrong)
+  const pokemonWeak = useSelector(store => store.pokedex.pokemonWeak)
   const loading = useSelector(store => store.pokedex.loading)
   const error = useSelector(store => store.pokedex.error)
 
-  const typeRelation = () => {
-    let type = []
-    let weak = []
-    let strong = []
-
-    pokemonDetails.types.map((types) =>(
-      (type.push(pokemonType[types.type.name].name),
-      weak.push(pokemonType[types.type.name].weak),
-      strong.push(pokemonType[types.type.name].strong))
-      ))
-      if(weak.length > 1){
-        const totalWeak = weak[0].concat(weak[1]).filter(val => !type.includes(val))
-        const totalStrong = strong[0].concat(strong[1]).filter(val => !type.includes(val))
-        let diffWeak = totalWeak.filter(val => !totalStrong.includes(val));
-        let diffStrong = totalStrong.filter(val => !totalWeak.includes(val));
-        diffStrong = [...new Set(diffStrong)]
-        diffWeak = [...new Set(diffWeak)]
-        return (setStrong(diffStrong),
-        setWeak(diffWeak))
-      } else {
-        const totalWeak = weak[0]
-        const totalStrong = strong[0]
-
-        return (setStrong(totalStrong),
-        setWeak(totalWeak))
-      }
-
-  }
-
-  let handleFight = (pokemon) => {
+  const handleFight = (pokemon) => {
     dispatch(isLoading(true))
     dispatch(addMyPokemon(pokemon))
     dispatch(isLoading(true))
@@ -55,10 +26,9 @@ function PokemonDetails() {
 }
 
   useEffect(() => {
-    let time = setTimeout(() => typeRelation(), 3500);
-    return () => {
-      clearTimeout(time);
-    };
+    dispatch(isLoading(true))
+    dispatch(getTypeRelation(pokemonDetails))
+    return;
 // eslint-disable-next-line
   }, [pokemonDetails])
 
@@ -66,10 +36,10 @@ function PokemonDetails() {
 
   return (
     <div className="d-flex flex-column">
-    { loading === true && !pokemonDetails.name && (
+    { (loading === true) && (
       <Spinner />
   )}
-    { pokemonDetails.name !== undefined && loading === false && pokemonDescription.color !== undefined && (
+    { (pokemonDescription.color) && (loading === false) && (pokemonDetails.name) && (
         <div className="pokemon-details d-flex flex-column align-items-center">
             <h1 h1 className="pokemon-name">{pokemonDetails.name} - #{pokemonDetails.id}</h1>
             <div className={`pokemon-infograph d-flex ${pokemonDescription.color.name}`}>
@@ -129,7 +99,7 @@ function PokemonDetails() {
     {error && (
         <h1>{error}</h1>
     )}
-    {(!pokemonDetails.name) && (loading === false) && (
+    {(!pokemonDetails.name) && (!pokemonDescription.color) && (loading === false) && (
       <>
         <h1>Error: Pokemon not Found</h1>
         <Link to='/pokedex' className="btn btn-dark btn-lg">Back</Link>
