@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { eraseState, isLoading, addEnemyPokemon } from '../../Redux/reducers';
+import { eraseState, isLoading, addEnemyPokemon, sumMyStats, sumEnemyStats } from '../../Redux/reducers';
 import { Link } from 'react-router-dom';
 import EnemyPokemon from '../EnemyPokemon'
 import MyPokemon from '../myPokemon'
@@ -9,87 +9,33 @@ import Fight from './fight';
 
 function Battle() {
   const dispatch = useDispatch();
-  const [myTotalStats, setMyTotalStats] = useState(0)
-  const [enemyTotalStats, setEnemyTotalStats] = useState(0)
   const [isStrong, setIsStrong] = useState(false)
   const [isWeak, setIsWeak] = useState(false)
   const [isLucky, setIsLucky] = useState(false)
   const [results, setResults] = useState(null)
   const [showHow, setShowHow] = useState(false)
   const [buttonText, setButtonText] = useState('Fight')
+  const [totalStats, setTotalStats] = useState(0)
   const myPokemon = useSelector(store => store.pokedex.myPokemon)
   const enemyPokemon = useSelector(store => store.pokedex.enemyPokemon)
-  
-    function sumMyStats() {
-      let myPokemonStats = []
-      let myStats = []
-      myPokemon.stats.map((stats) =>(
-          myPokemonStats.push(stats.base_stat)
-      ))
-      let myHp = myPokemonStats.splice(0,1)
-      let mySpeed = myPokemonStats.splice(-1,1)
-      let myRandomStat = myPokemonStats[Math.floor(Math.random() * myPokemonStats.length)];
-      myStats.push(myHp[0])
-      myStats.push(mySpeed[0])
-      myStats.push(myRandomStat) 
-      const mySum = myStats.reduce((partialSuma, b) => partialSuma + b, 0)
-
-      return setMyTotalStats(mySum)
-    }
-
-    function sumEnemyStats() {
-      let enemyPokemonStats = []
-      let enemyStats = []
-      enemyPokemon.stats.map((stats) =>(
-        enemyPokemonStats.push(stats.base_stat)
-    ))
-      let enemyHp = enemyPokemonStats.splice(0,1)
-      let enemySpeed = enemyPokemonStats.splice(-1,1)
-      let enemyRandomStat = enemyPokemonStats[Math.floor(Math.random() * enemyPokemonStats.length)];
-      enemyStats.push(enemyHp[0])
-      enemyStats.push(enemySpeed[0])
-      enemyStats.push(enemyRandomStat) 
-      const enemySum = enemyStats.reduce((partialSum, a) => partialSum + a, 0)
-
-      return setEnemyTotalStats(enemySum)
-    }
+  const pokemonStrong = useSelector(store => store.pokedex.pokemonStrong)
+  const pokemonWeak = useSelector(store => store.pokedex.pokemonWeak)  
+  const myStats = useSelector(store => store.pokedex.myPokemonStats)  
+  const enemyStats = useSelector(store => store.pokedex.enemyPokemonStats)  
   
   function strong() {
-    let myType = []
     let enemyType = []
-    let strong = []
-    let weak = []
 
-    myPokemon.types.map((types) =>(
-      (myType.push(pokemonType[types.type.name].name),
-      strong.push(pokemonType[types.type.name].strong),
-      weak.push(pokemonType[types.type.name].weak))
-      ));
     enemyPokemon.types.map((types) =>(
       enemyType.push(pokemonType[types.type.name].name)
     ))
-      if(strong.length > 1){
-        let totalWeak = weak[0].concat(weak[1]).filter(val => !myType.includes(val))
-        let totalStrong = strong[0].concat(strong[1]).filter(val => !myType.includes(val))
-        console.log(totalWeak)
-        console.log(totalStrong)
-        totalWeak = [...new Set(totalWeak)]
-        totalStrong = [...new Set(totalStrong)]
-        console.log(totalWeak)
-        console.log(totalStrong)
-        let resultStrong = totalStrong.includes(enemyType[0] || enemyType[1])
-        let resultWeak = totalWeak.includes(enemyType[0] || enemyType[1])
-        console.log(resultStrong)
-        console.log(resultWeak)
-        return (setIsStrong(resultStrong), setIsWeak(resultWeak))
-      } else {
-        const totalStrong = strong[0]
-        const totalWeak = weak[0]
-        let resultStrong = totalStrong.includes(enemyType[0])
-        let resultWeak = totalWeak.includes(enemyType[0])
-
-        return (setIsStrong(resultStrong), setIsWeak(resultWeak))
-      }   
+      if(pokemonStrong.includes(enemyType[0] || enemyType[1])){
+        console.log('strong true')
+        return setIsStrong(true)
+      } else if (pokemonWeak.includes(enemyType[0] || enemyType[1])) {
+        console.log('weak true')
+        return setIsWeak(true)
+      } else { return }
   }
 
   function lucky() {
@@ -118,39 +64,42 @@ function Battle() {
 
   function fight() {
     setButtonText('Try Again')
-    sumMyStats()
-    sumEnemyStats()
+    dispatch(sumMyStats(myPokemon))
+    dispatch(sumEnemyStats(enemyPokemon))
     strong()
     lucky()
     if(isStrong && isLucky) {
       setResults('Your Pokemon type is favorable and got lucky!!!')
       let bonus = 70
-      setMyTotalStats(myTotalStats => myTotalStats + bonus)
+      setTotalStats(totalStats => myStats + bonus)
     } else if (isWeak && isLucky) {
       setResults('Your Pokemon type is unfavorable but got lucky!!!')
       let bonus = 30
-      setMyTotalStats(myTotalStats => myTotalStats + bonus)
+      setTotalStats(totalStats => myStats + bonus)
     } else if (isLucky) {
       setResults('Your Pokemon got lucky!!!')
       let bonus = 50
-      setMyTotalStats(myTotalStats => myTotalStats + bonus)
+      setTotalStats(totalStats => myStats + bonus)
     } else if (isStrong) {
       setResults('Your Pokemon type is favorable!')
       let bonus = 20
-      setMyTotalStats(myTotalStats => myTotalStats + bonus)
+      setTotalStats(totalStats => myStats + bonus)
     } else if (isWeak){
       setResults('Your Pokemon type is unfavorable!')
       let bonus = 20
-      setMyTotalStats(myTotalStats => myTotalStats - bonus)
+      setTotalStats(totalStats => myStats - bonus)
     } else {
+      setTotalStats(totalStats => myStats )
       setResults('Both fights in the same conditions!')
     }
   }
 
   useEffect(() => {
     if(enemyPokemon.name){
-      sumMyStats()
-      sumEnemyStats()
+      setIsStrong(false)
+      setIsWeak(false)
+      dispatch(sumMyStats(myPokemon))
+      dispatch(sumEnemyStats(enemyPokemon))
       strong()
       lucky()
     }
@@ -178,8 +127,8 @@ function Battle() {
               <div className="modal-body">
                 <Fight
                   results={results}
-                  myStats={myTotalStats}
-                  enemyStats={enemyTotalStats}
+                  myStats={totalStats}
+                  enemyStats={enemyStats}
                   pokemonName={myPokemon.name}
                   enemyPokemonName={enemyPokemon.name}
                   />

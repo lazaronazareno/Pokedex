@@ -40,7 +40,7 @@ function PokemonDetails() {
       <Spinner />
   )}
     { (pokemonDescription.color) && (loading === false) && (pokemonDetails.name) && (
-        <div className="pokemon-details d-flex flex-column align-items-center">
+        <div className="pokemon-details bg-danger d-flex flex-column align-items-center">
             <h1 h1 className="pokemon-name">{pokemonDetails.name} - #{pokemonDetails.id}</h1>
             <div className={`pokemon-infograph d-flex ${pokemonDescription.color.name}`}>
               <div className="d-flex flex-column">

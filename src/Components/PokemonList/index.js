@@ -40,7 +40,7 @@ function PokemonList() {
   }
 
   return (
-    <div className="">
+    <div className="pokemonList">
       {loading === true && (
         <Spinner />
       )}
@@ -50,7 +50,7 @@ function PokemonList() {
         <div className="pokemonlist_container">
           {pokemonList.map((pokemon, index) => (
             <div className="pokemon-card_container" key={pokemon.name}>
-              <Link to={`/details/${newIndex(index)}`} className="pokemonlist_card d-flex flex-column border border-dark" id={newIndex(index)} onClick={() => handleDetails(newIndex(index))} alt={pokemon.name}>
+              <Link to={`/details/${newIndex(index)}`} className="pokemonlist_card d-flex flex-column" id={newIndex(index)} onClick={() => handleDetails(newIndex(index))} alt={pokemon.name}>
                 <img className="pokemon_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${newIndex(index)}.png`} alt={pokemon.name}/>
                 <div className="another_card">
                   <span className="pokemon-name text-wrap">{pokemon.name}</span>
@@ -59,7 +59,7 @@ function PokemonList() {
             </div>
           ))}
         </div>
-        <Link to='/' className="btn btn-dark btn-lg">Back</Link>
+        <Link to='/' className="goBackButton btn btn-primary btn-lg">Back</Link>
       </div>
       )}
       {error && (
@@ -67,13 +67,13 @@ function PokemonList() {
       )}
       <div className="container d-flex justify-content-evenly p-2">
         { numberPage > 1 && loading === false && (
-            <button className="btn btn-lg btn-dark" onClick={() => dispatch(decNum(numberPage))}>Prev Page</button>
+            <button className="btn btn-lg btn-primary" onClick={() => dispatch(decNum(numberPage))}>Prev Page</button>
         )}
         { loading === false && (
             <span className="fs-4">Page {numberPage}</span>
         )}
         { numberPage < 30 && loading === false && (
-            <button className="btn btn-lg btn-dark" onClick={() => dispatch(sumNum(numberPage))}>Next Page</button>
+            <button className="btn btn-lg btn-primary" onClick={() => dispatch(sumNum(numberPage))}>Next Page</button>
         )}
       </div>
     </div>

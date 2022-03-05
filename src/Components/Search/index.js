@@ -62,7 +62,7 @@ function Search() {
         {error && (
           <h1>{error}</h1>
         )}
-        <Link to='/' className="btn btn-dark btn-lg" onClick={() => dispatch(eraseState())}>Back</Link>
+        <Link to='/' className="goBackButton btn btn-primary btn-lg" onClick={() => dispatch(eraseState())}>Back</Link>
       </div>
     </div>
   )

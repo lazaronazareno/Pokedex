@@ -1,5 +1,9 @@
+.pokemonList {
+  min-height:100vh;
+}
+
 .pokemonlist_container{
-  height: 80vh;
+  min-height: 80vh;
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
@@ -25,6 +29,7 @@
   border-radius: 100%;
   transition: transform 1s;
   transform-style: preserve-3d;
+  background-color: rgb(999, 999, 800, 0.2);
 }
 
 .pokemon_image {
@@ -42,10 +47,21 @@
   justify-content: center;
   position: absolute;
   display: flex;
-  background-color: aquamarine;
+  background-color: rgb(999, 999, 800, 0.2);
   transform: rotateY(180deg);
+}
+
+.another_card span {
+  text-decoration: none;
+  color: black;
 }
 
 .pokemon-name {
   text-transform: capitalize;
+}
+
+.goBackButton {
+  position: absolute;
+  top: 0;
+  right: 0;
 }

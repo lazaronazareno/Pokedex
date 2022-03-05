@@ -10,8 +10,10 @@ const initialState = {
     "searchPokemonList": [],
     "myTeam" : [],
     "myPokemon" : [],
+    "myPokemonStats" : 0,
     "enemyTeam" : [],
     "enemyPokemon" : [],
+    "enemyPokemonStats" : 0,
     "loading" : false,
     "error" : null,
     "numberPage" : 1,
@@ -26,6 +28,8 @@ const ADDTO_MYTEAM = 'ADDTO_MYTEAM';
 const ADDTO_MYPOKEMON = 'ADDTO_MYPOKEMON';
 const ADDTO_ENEMYTEAM = 'ADDTO_ENEMYTEAM';
 const ADDTO_ENEMYPOKEMON = 'ADDTO_ENEMYPOKEMON';
+const SUM_MYSTATS = 'SUM_MYSTATS';
+const SUM_ENEMYSTATS = 'SUM_ENEMYSTATS';
 const IS_LOADING = 'IS_LOADING';
 const SUM_NUM = 'SUM_NUM';
 const DEC_NUM = 'DEC_NUM';
@@ -124,6 +128,16 @@ export default function reducer (state = initialState, action) {
             return {
                 ...state,
                 enemyTeam: action.payload,
+            }
+        case SUM_MYSTATS :
+            return {
+                ...state,
+                myPokemonStats: action.payload,
+            }
+        case SUM_ENEMYSTATS :
+            return {
+                ...state,
+                enemyPokemonStats: action.payload,
             }
         case IS_LOADING :
             return {
@@ -274,6 +288,46 @@ export const addEnemyPokemon = () => async (dispatch, getState) => {
             payload: error,
         })
     }
+}
+
+export const sumMyStats = (myPokemon) => (dispatch, getState) => {
+    let myPokemonStats = []
+    let myStats = []
+    myPokemon.stats.map((stats) =>(
+        myPokemonStats.push(stats.base_stat)
+    ))
+    let myHp = myPokemonStats.splice(0,1)
+    let mySpeed = myPokemonStats.splice(-1,1)
+    let myRandomStat = myPokemonStats[Math.floor(Math.random() * myPokemonStats.length)];
+    myStats.push(myHp[0])
+    myStats.push(mySpeed[0])
+    myStats.push(myRandomStat) 
+    const mySum = myStats.reduce((partialSuma, b) => partialSuma + b, 0)
+
+    dispatch({
+        type: SUM_MYSTATS,
+        payload : mySum
+    })
+}
+
+export const sumEnemyStats = (myPokemon) => (dispatch, getState) => {
+    let myPokemonStats = []
+    let myStats = []
+    myPokemon.stats.map((stats) =>(
+        myPokemonStats.push(stats.base_stat)
+    ))
+    let myHp = myPokemonStats.splice(0,1)
+    let mySpeed = myPokemonStats.splice(-1,1)
+    let myRandomStat = myPokemonStats[Math.floor(Math.random() * myPokemonStats.length)];
+    myStats.push(myHp[0])
+    myStats.push(mySpeed[0])
+    myStats.push(myRandomStat) 
+    const mySum = myStats.reduce((partialSuma, b) => partialSuma + b, 0)
+
+    dispatch({
+        type: SUM_ENEMYSTATS,
+        payload : mySum
+    })
 }
 
 export const isLoading = (trueFalse) => (dispatch, getState) => {
