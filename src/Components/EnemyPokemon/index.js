@@ -1,18 +1,26 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom';
 import pokemonType from '../../Assets/pokemontypes'
 import Spinner from '../Spinner';
 
 function EnemyPokemon() {
   const enemyPokemon = useSelector(store => store.pokedex.enemyPokemon)
   const loading = useSelector(store => store.pokedex.loading)
+  const error = useSelector(store => store.pokedex.error)
 
   return (
     <div>
       {loading === true && (
         <Spinner />
       )}
-      {enemyPokemon.name && !loading && (
+      {error && (
+        <>
+          <h1>{error}</h1>
+          <Link to="/" className="btn btn-dark">Back</Link>
+        </>
+      )}
+      {(!loading) && (!error) && (enemyPokemon.name) && (
         <div>
           <img className="my-pokemon-img" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${enemyPokemon.id}.png`} alt={enemyPokemon.name}/>
           <h1 className="pokemon-name">{enemyPokemon.name}</h1>

@@ -94,8 +94,8 @@ export default function reducer (state = initialState, action) {
             if(action.payload.message) {
                 return {
                     ...state,
-                    error: 'Error : Pokemon Not Found',
                     searchPokemonList : [],
+                    error: 'Error : Pokemon Not Found',
                     loading: false
                 }
             }else {
@@ -122,8 +122,8 @@ export default function reducer (state = initialState, action) {
             if(action.payload.message) {
                 return {
                     ...state,
+                    enemyPokemon : null,
                     error: 'Error : Something went wrong',
-                    searchPokemonList : [],
                     loading: false
                 }
             } else {

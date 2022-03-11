@@ -97,7 +97,7 @@ function Battle() {
   }
 
   useEffect(() => {
-    if(enemyPokemon.name){
+    if(enemyPokemon.name && myPokemon.name){
       setIsStrong(false)
       setIsWeak(false)
       dispatch(sumMyStats(myPokemon))
@@ -110,7 +110,7 @@ function Battle() {
 
   return (
     <div>
-    { (myPokemon.name) && (
+    { (myPokemon.name) && (!error) && (
       <div className="battle-container">
         <div className="battle-pokemons d-flex justify-content-evenly">
           <div className="battle-mypokemon d-flex flex-column">
@@ -147,7 +147,7 @@ function Battle() {
                       {showHow && (
                         <span>Total Power of Pokemons is calculated based in three main Attributes and the Bonus.
                           The first and second attributes are Hp and Speed but the third one is random among the remaining four.
-                          The bonus depends on the effectiveness of the type and if you are lucky. Effectivenes Type gives you +20 and luck +50.
+                          The bonus depends on the effectiveness of the type and if you are lucky. Effectivenes Type adds/removes you 40 points and luck +100.
                           Lucky has a 3% chance of appearing.
                         </span>
                       )}
@@ -158,6 +158,12 @@ function Battle() {
           </div>
         </div>
       </div>
+      )}
+      { (!myPokemon.name) && (
+        <>
+          <h1>There is nothing... you can fight when you choose your pokemon</h1>
+          <Link to="/pokedex" onClick={() => dispatch(eraseState())} className="btn btn-dark">Choose Pokemon</Link>
+        </>
       )}
       {(error) && (
         <>
