@@ -119,10 +119,19 @@ export default function reducer (state = initialState, action) {
                 myTeam: action.payload,
             }
         case ADDTO_ENEMYPOKEMON :
-            return {
-                ...state,
-                enemyPokemon: action.payload,
-                loading: false
+            if(action.payload.message) {
+                return {
+                    ...state,
+                    error: 'Error : Something went wrong',
+                    searchPokemonList : [],
+                    loading: false
+                }
+            } else {
+                return {
+                    ...state,
+                    enemyPokemon: action.payload,
+                    loading: false
+                }
             }
         case ADDTO_ENEMYTEAM :
             return {
@@ -159,6 +168,7 @@ export default function reducer (state = initialState, action) {
         case ERASE_STATE :
             return {
                 ...state,
+                pokemonList: [],
                 pokemonDetails : [],
                 pokemonDescription : [],
                 typeRelations : [],
@@ -166,7 +176,6 @@ export default function reducer (state = initialState, action) {
                 enemyPokemon: [],
                 loading : false,
                 error : null,
-                numberPage : 1,
             }
         default:
             return state;

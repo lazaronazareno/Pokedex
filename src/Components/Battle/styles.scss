@@ -1,0 +1,40 @@
+.battle-container {
+  background-image: url('../../Assets/battle.png');
+  background-size: cover;
+  min-height: 100vh;
+}
+
+.battle-pokemons {
+  min-height: 90vh;
+}
+
+.battle-mypokemon, .battle-enemypokemon, .battle-vs {  
+  background-color: rgb(0, 0, 0, 0.5);
+  border-radius: 1%;
+  padding: 10px;
+  color: white;
+}
+
+.battle-mypokemon {
+  align-self: self-end;
+}
+
+.battle-enemypokemon {
+  align-self: self-start;
+}
+
+.modal-content {
+  border: 15px solid #DA1212!important;
+  background-color: #11468F!important;
+  color: white;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.show {
+  display: flex!important;
+}

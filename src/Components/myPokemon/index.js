@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { eraseState } from '../../Redux/reducers';
 import { Link } from 'react-router-dom';
 import pokemonType from '../../Assets/pokemontypes'
+import './styles.scss'
 
 function MyPokemon() {
   const dispatch = useDispatch();
@@ -10,7 +11,7 @@ function MyPokemon() {
   const enemyPokemon = useSelector(store => store.pokedex.enemyPokemon)
 
   return (
-    <div>
+    <div className="d-flex justify-content-center">
       {myPokemon.name && (
         <div>
           <img className="my-pokemon-img" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${myPokemon.id}.png`} alt={myPokemon.name}/>
@@ -18,17 +19,19 @@ function MyPokemon() {
           {myPokemon.types.map((types) =>(
             <img className="pokemon-type_img" src={pokemonType[types.type.name].img} key={types.type.name} alt={types.type.name}/>
           ))}
-          {myPokemon.stats.map((stats) =>(
-            <div className="pokemon-meter d-flex justify-content-between" key={stats.stat.name}>
-              <span>{stats.stat.name} : {stats.base_stat}</span>
-              <meter                   
-              min="0" 
-              max='255'
-              value={stats.base_stat}>
-                {stats.stat.name}
-              </meter>
-            </div>
-          ))}
+          <div>
+            {myPokemon.stats.map((stats) =>(
+              <div className="pokemon-meter d-flex justify-content-between" key={stats.stat.name}>
+                <span>{stats.stat.name} : {stats.base_stat}</span>
+                <meter                   
+                min="0" 
+                max='255'
+                value={stats.base_stat}>
+                  {stats.stat.name}
+                </meter>
+              </div>
+            ))}
+          </div>
           {!enemyPokemon.name && (
             <Link to="/" onClick={() => dispatch(eraseState())} className="btn btn-primary">Back</Link>
           )}

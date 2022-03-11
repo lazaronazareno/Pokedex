@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 import EnemyPokemon from '../EnemyPokemon'
 import MyPokemon from '../myPokemon'
 import pokemonType from '../../Assets/pokemontypes'
-import Fight from './fight';
+import Fight from './fight'
+import './styles.scss'
 
 function Battle() {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ function Battle() {
   const pokemonWeak = useSelector(store => store.pokedex.pokemonWeak)  
   const myStats = useSelector(store => store.pokedex.myPokemonStats)  
   const enemyStats = useSelector(store => store.pokedex.enemyPokemonStats)  
+  const error = useSelector(store => store.pokedex.error)  
   
   function strong() {
     let enemyType = []
@@ -70,23 +72,23 @@ function Battle() {
     lucky()
     if(isStrong && isLucky) {
       setResults('Your Pokemon type is favorable and got lucky!!!')
-      let bonus = 70
+      let bonus = 140
       setTotalStats(totalStats => myStats + bonus)
     } else if (isWeak && isLucky) {
       setResults('Your Pokemon type is unfavorable but got lucky!!!')
-      let bonus = 30
+      let bonus = 60
       setTotalStats(totalStats => myStats + bonus)
     } else if (isLucky) {
       setResults('Your Pokemon got lucky!!!')
-      let bonus = 50
+      let bonus = 100
       setTotalStats(totalStats => myStats + bonus)
     } else if (isStrong) {
       setResults('Your Pokemon type is favorable!')
-      let bonus = 20
+      let bonus = 40
       setTotalStats(totalStats => myStats + bonus)
     } else if (isWeak){
       setResults('Your Pokemon type is unfavorable!')
-      let bonus = 20
+      let bonus = 40
       setTotalStats(totalStats => myStats - bonus)
     } else {
       setTotalStats(totalStats => myStats )
@@ -108,45 +110,61 @@ function Battle() {
 
   return (
     <div>
-      <div className="d-flex justify-content-evenly">
-        <MyPokemon />
-        <h1>VS</h1>
-        <EnemyPokemon />
-      </div>
-      <div>
-        <Link to="/" onClick={() => dispatch(eraseState())} className="btn btn-primary">Back</Link>
-        <button className="btn btn-primary" onClick={() => fight()} data-bs-toggle="modal" data-bs-target="#exampleModal">{buttonText}</button>
-        <button className="btn btn-primary" onClick={() => handleOpponent()}>Change Opponent</button>
-        <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">Results of the Fight</h5>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div className="modal-body">
-                <Fight
-                  results={results}
-                  myStats={totalStats}
-                  enemyStats={enemyStats}
-                  pokemonName={myPokemon.name}
-                  enemyPokemonName={enemyPokemon.name}
-                  />
-                <div className="d-flex flex-column w-50">
-                  <button className="btn btn-primary" onClick={() => showText()}>How it works?</button>
-                    {showHow && (
-                      <span>Total Power of Pokemons is calculated based in three main Attributes and the Bonus.
-                        The first and second attributes are Hp and Speed but the third one is random among the remaining four.
-                        The bonus depends on the effectiveness of the type and if you are lucky. Effectivenes Type gives you +20 and luck +50.
-                        Lucky has a 3% chance of appearing.
-                      </span>
-                    )}
+    { (myPokemon.name) && (
+      <div className="battle-container">
+        <div className="battle-pokemons d-flex justify-content-evenly">
+          <div className="battle-mypokemon d-flex flex-column">
+            <MyPokemon />
+          </div>
+          <h1 className="battle-vs align-self-center">VS</h1>
+          <div className="battle-enemypokemon d-flex flex-column">
+            <EnemyPokemon />
+          </div>
+        </div>
+        <div>
+          <div className="d-flex justify-content-evenly">
+            <Link to="/" onClick={() => dispatch(eraseState())} className="btn btn-dark">Back</Link>
+            <button className="btn btn-dark" onClick={() => fight()} data-bs-toggle="modal" data-bs-target="#exampleModal">{buttonText}</button>
+            <button className="btn btn-dark" onClick={() => handleOpponent()}>Change Opponent</button>
+          </div>
+          <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalLabel">Results of the Fight</h5>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div className="modal-body">
+                  <Fight
+                    results={results}
+                    myStats={totalStats}
+                    enemyStats={enemyStats}
+                    pokemonName={myPokemon.name}
+                    enemyPokemonName={enemyPokemon.name}
+                    />
+                  <div className="d-flex flex-column">
+                    <button className="btn btn-light" onClick={() => showText()}>How it works?</button>
+                      {showHow && (
+                        <span>Total Power of Pokemons is calculated based in three main Attributes and the Bonus.
+                          The first and second attributes are Hp and Speed but the third one is random among the remaining four.
+                          The bonus depends on the effectiveness of the type and if you are lucky. Effectivenes Type gives you +20 and luck +50.
+                          Lucky has a 3% chance of appearing.
+                        </span>
+                      )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      )}
+      {(error) && (
+        <>
+          <h1>{error}</h1>
+          <Link to="/" onClick={() => dispatch(eraseState())} className="btn btn-dark">Back</Link>
+        </>
+      )}
     </div>
   )
 }
