@@ -27,7 +27,10 @@ const pokedexApi = {
   pokedex: {
     getPokemons(page) {
         return callApi(`/pokemon/?limit=18&offset=${18*(page-1)}`);
-      },
+    },
+    getPokemonsByGeneration(amountPokemons, gen) {
+        return callApi(`/pokemon/?limit=${amountPokemons}&offset=${gen}`);
+    },
     getPokemonById(id) {
         return callApi(`/pokemon/${id}`)
     },

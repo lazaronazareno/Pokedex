@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getPokemons, isLoading, sumNum, decNum, getDetails, getDescription } from '../../Redux/reducers';
 import './styles.scss'
 import Spinner from '../Spinner';
+import MenuPokemonList from './menu';
 
 function PokemonList() {
   const dispatch = useDispatch();
@@ -22,14 +23,41 @@ function PokemonList() {
 
     const newIndex = (id) => {
       let pokemonIndex = 0
-      if(numberPage ===  1){
+      if (pokemonList.length === 151) {
         pokemonIndex = id + 1
         return pokemonIndex;
-      } else if(numberPage > 1) {
-        pokemonIndex =id + 1+ 18*(numberPage-1) 
+      }
+      else if(pokemonList.length === 100) {
+        pokemonIndex = id + 151 + 1
         return pokemonIndex;
-      }else{
-        return;
+      } else if (pokemonList.length === 135) {
+        pokemonIndex = id + 251 + 1
+        return pokemonIndex;
+      } else if (pokemonList.length === 107) {
+        pokemonIndex = id + 386 + 1
+        return pokemonIndex;
+      } else if (pokemonList.length === 156) {
+        pokemonIndex = id + 493 + 1
+        return pokemonIndex;
+      } else if (pokemonList.length === 72) {
+        pokemonIndex = id + 649 + 1
+        return pokemonIndex;
+      } else if (pokemonList.length === 88) {
+        pokemonIndex = id + 721 + 1
+        return pokemonIndex;
+      } else if (pokemonList.length === 89) {
+        pokemonIndex = id + 809 + 1
+        return pokemonIndex;
+      } else if (pokemonList.length === 18) {
+        if(numberPage ===  1){
+          pokemonIndex = id + 1
+          return pokemonIndex;
+        } else if(numberPage > 1) {
+          pokemonIndex =id + 1+ 18*(numberPage-1) 
+          return pokemonIndex;
+        }else{
+          return;
+        }
       }
     }
 
@@ -47,6 +75,7 @@ function PokemonList() {
       {loading === false && (
       <div>
         <h1>Pokemon List</h1>
+        <MenuPokemonList />
         <div className="pokemonlist_container">
           {pokemonList.map((pokemon, index) => (
             <div className="pokemon-card_container" key={pokemon.name}>
@@ -66,13 +95,13 @@ function PokemonList() {
         <h1>{error}</h1>
       )}
       <div className="container d-flex justify-content-evenly p-2">
-        { numberPage > 1 && loading === false && (
+        { pokemonList.length === 18 && numberPage > 1 && loading === false && (
             <button className="btn btn-lg btn-primary" onClick={() => dispatch(decNum(numberPage))}>Prev Page</button>
         )}
-        { loading === false && (
+        { pokemonList.length === 18 && loading === false && (
             <span className="fs-4">Page {numberPage}</span>
         )}
-        { numberPage < 30 && loading === false && (
+        { pokemonList.length === 18 && numberPage < 45 && loading === false && (
             <button className="btn btn-lg btn-primary" onClick={() => dispatch(sumNum(numberPage))}>Next Page</button>
         )}
       </div>

@@ -20,6 +20,7 @@ const initialState = {
 }
 
 const GET_POKEMONS = 'GET_POKEMONS';
+const GET_POKESGENERATION = 'GET_POKESGENERATION'
 const GET_DETAILS = 'GET_DETAILS';
 const GET_DESCRIPTION = 'GET_DESCRIPTION';
 const GET_TYPERELATION = 'GET_TYPERELATION';
@@ -39,6 +40,21 @@ export default function reducer (state = initialState, action) {
     console.log(action)
     switch (action.type) {
         case GET_POKEMONS : 
+        if(action.payload.message) {
+            return {
+                ...state,
+                error : action.payload.message,
+                loading: false
+            }
+        } else {
+            return {
+                ...state,
+                pokemonList : action.payload,
+                error: null,
+                loading: false,
+            }
+        }
+        case GET_POKESGENERATION : 
         if(action.payload.message) {
             return {
                 ...state,
@@ -122,7 +138,6 @@ export default function reducer (state = initialState, action) {
             if(action.payload.message) {
                 return {
                     ...state,
-                    enemyPokemon : null,
                     error: 'Error : Something went wrong',
                     loading: false
                 }
@@ -192,6 +207,21 @@ export const getPokemons = (numberPage) => async (dispatch, getState) => {
     } catch (error) {
         dispatch ({
             type: GET_POKEMONS,
+            payload: error,
+        })
+    }
+}
+
+export const getPokemonsByGeneration = (amountPokemons, gen) => async (dispatch, getState) => {
+    try {
+        const data = await api.pokedex.getPokemonsByGeneration(amountPokemons, gen)
+        dispatch({
+            type : GET_POKESGENERATION,
+            payload : data.results,
+        })
+    } catch (error) {
+        dispatch ({
+            type: GET_POKESGENERATION,
             payload: error,
         })
     }

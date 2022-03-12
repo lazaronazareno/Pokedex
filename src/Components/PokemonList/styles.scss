@@ -61,7 +61,15 @@
 }
 
 .goBackButton {
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
+}
+
+.menu-container {
+  position: fixed!important;
+  z-index: 1;
+  width: 15.5vw;
+  top: 0;
+  color: #fff!important;
 }
