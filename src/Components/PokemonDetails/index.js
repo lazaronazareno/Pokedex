@@ -36,7 +36,7 @@ function PokemonDetails() {
     }
     return;
 // eslint-disable-next-line
-  }, [])
+  }, [pokemonDetails.name])
 
 
 
