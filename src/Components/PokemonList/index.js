@@ -73,7 +73,7 @@ function PokemonList() {
         <Spinner />
       )}
       {loading === false && (
-      <div className="p-4">
+      <div className="padding">
         <h1>Pokemon List</h1>
         <MenuPokemonList />
         <div className="pokemonlist_container">

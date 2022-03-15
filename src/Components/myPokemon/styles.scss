@@ -10,3 +10,9 @@
   flex-direction: column;
   background: lightslategray;
 }
+
+@media (max-width: 800px) {
+  .my-pokemon-img {
+    height: 22vh;
+  }
+}

@@ -47,3 +47,29 @@
 .show {
   display: flex!important;
 }
+
+@media (max-width:1250px) {
+  .battle-container {
+    background-position-x: center;
+  }
+}
+@media (max-width:800px) {
+  .battle-mypokemon, .battle-enemypokemon{
+    height: 60vh;
+}
+}
+@media (max-width:600px) {
+  .battle-pokemons{
+    flex-direction: column;
+  }
+
+  .battle-mypokemon {
+    order: 1;
+    align-self: flex-start;
+  }
+
+  .battle-enemypokemon {
+    order: -1;
+    align-self: flex-end;
+  }
+}

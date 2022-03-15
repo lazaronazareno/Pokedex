@@ -1,3 +1,7 @@
+.padding {
+  padding:1.5rem;
+}
+
 .pokemonList {
   min-height:100vh;
 }
@@ -72,4 +76,71 @@
   width: 15.5vw;
   top: 0;
   color: #fff!important;
+}
+
+.header-responsive-burger {
+  display: none;
+}
+
+.header-responsive-img {
+  width: 5vh;
+  height: 5vh;
+}
+
+.container__header-responsive {
+  position: absolute;
+  top: 5vh;
+  left: -75vh;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.container__header-responsive-show {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  transform: translateX(75vh);
+  transition: transform 0.5s ease-in-out;
+}
+
+.container__header-responsive-show a {
+  font-size: xx-large;
+  text-decoration: none;
+  color: #444;
+  padding: 5vh;
+
+  &:hover {
+    color: #444;
+    background-color: #ffd100;
+    border: 2px solid #444;
+  }
+}
+
+@media (max-width: 1062px) {
+  .pokemon-card_container {
+    margin: 1vh 3vh;
+  }
+}
+@media (max-width: 770px) {
+  .padding {
+    padding: 0;
+  }
+
+  .pokemon-card_container {
+    margin: 1vh 1vh;
+  }
+
+  .header-responsive-burger {
+    cursor: pointer;
+    display: flex;
+    top: 0;
+    left: 0;
+    position: absolute;
+  }
+
+  .dropdown-toggle {
+    display: none!important;
+  }
 }

@@ -49,14 +49,14 @@ function PokemonDetails() {
         <div className="pokemon-details bg-danger d-flex flex-column align-items-center">
             <h1 className="pokemon-name">{pokemonDetails.name} - #{pokemonDetails.id}</h1>
             <div className={`pokemon-infograph d-flex ${pokemonDescription.color.name}`}>
-              <div className="d-flex flex-column">
+              <div className="d-flex my-type">
                 {pokemonDetails.types.map((types) =>(
                   <img className="pokemon-type_img" src={pokemonType[types.type.name].img} key={types.type.name} alt={types.type.name}/>
                   ))}
               </div>
               <img className="pokemon-details_image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`} alt={pokemonDetails.name}/>
               <div className="weakness-container d-flex flex-column">
-                <h1>Strong against</h1>
+                <h1>Strong vs</h1>
                 <div className="d-flex flex-wrap">
                   {!pokemonStrong && ( <Spinner /> )}
                   { pokemonStrong && (
@@ -65,7 +65,7 @@ function PokemonDetails() {
                     ))
                   )}
                 </div>
-                <h1>Weak against</h1>
+                <h1>Weak vs</h1>
                 <div className="d-flex flex-wrap">
                   {!pokemonWeak && ( <Spinner />)}
                   { pokemonWeak && (
