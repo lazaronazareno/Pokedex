@@ -100,7 +100,7 @@ function Battle() {
   }
 
   useEffect(() => {
-    if(enemyPokemon.name){
+    if(myPokemon.name && enemyPokemon.name){
       setIsStrong(false)
       setIsWeak(false)
       strong()

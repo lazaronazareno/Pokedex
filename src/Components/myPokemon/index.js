@@ -11,8 +11,8 @@ const MyPokemon = ({  myPokemon }) => {
   const searchPokemonList = useSelector(store => store.pokedex.searchPokemonList)
 
   return (
-    <div className="d-flex justify-content-center">
-      {myPokemon && (
+    <div className="mypokemon-container d-flex flex-column justify-content-center">
+      {myPokemon.name && (
         <div>
           <img className="my-pokemon-img" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${myPokemon.id}.png`} alt={myPokemon.name}/>
           <h1 className="pokemon-name">{myPokemon.name}</h1>
@@ -37,11 +37,12 @@ const MyPokemon = ({  myPokemon }) => {
           )}
         </div>
       )}
-      {!myPokemon && (
-        <>
+      {!myPokemon.name && (
+        <div className="error-div">
           <h1>Looks like you havent choose a favorite pokemon. I know its hard but try it</h1>
           <Link to="/pokedex" className="btn btn-primary">Go</Link>
-        </>
+          <Link to='/' className="goBackButton btn btn-primary btn-lg">Back</Link>
+        </div>
       )}
     </div>
   )
