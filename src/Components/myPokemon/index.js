@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom';
 import pokemonType from '../../Assets/pokemontypes'
 import './styles.scss'
 
-function MyPokemon() {
+const MyPokemon = ({  myPokemon }) => {
   const dispatch = useDispatch();
-  const myPokemon = useSelector(store => store.pokedex.myPokemon)
   const enemyPokemon = useSelector(store => store.pokedex.enemyPokemon)
+  const searchPokemonList = useSelector(store => store.pokedex.searchPokemonList)
 
   return (
     <div className="d-flex justify-content-center">
-      {myPokemon.name && (
+      {myPokemon && (
         <div>
           <img className="my-pokemon-img" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${myPokemon.id}.png`} alt={myPokemon.name}/>
           <h1 className="pokemon-name">{myPokemon.name}</h1>
@@ -32,12 +32,12 @@ function MyPokemon() {
               </div>
             ))}
           </div>
-          {!enemyPokemon.name && (
+          {!enemyPokemon.name && !searchPokemonList.name && (
             <Link to="/" onClick={() => dispatch(eraseState())} className="btn btn-primary">Back</Link>
           )}
         </div>
       )}
-      {!myPokemon.name && (
+      {!myPokemon && (
         <>
           <h1>Looks like you havent choose a favorite pokemon. I know its hard but try it</h1>
           <Link to="/pokedex" className="btn btn-primary">Go</Link>

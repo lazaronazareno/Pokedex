@@ -1,8 +1,17 @@
-.battle-container {
+.battle-container, .battle-container-error {
   background-image: url('../../Assets/battle.png');
   background-size: cover;
   min-height: 100vh;
 }
+
+.battle-container-error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
 
 .battle-pokemons {
   min-height: 90vh;
@@ -23,7 +32,7 @@
   align-self: self-start;
 }
 
-.modal-content {
+.modal-content, .battle-container-error__div {
   border: 15px solid #DA1212!important;
   background-color: #11468F!important;
   color: white;

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
-import { searchPokemon, isLoading, eraseState } from '../../Redux/reducers'
+import { searchPokemon, addMyPokemon, isLoading, eraseState } from '../../Redux/reducers'
+import MyPokemon from '../myPokemon';
 import './styles.scss'
 
 
@@ -29,8 +30,8 @@ function Search() {
 
 
   return (
-    <div>
-      <form className="d-flex flex-column" onSubmit={handleSubmit}>
+    <div className="d-flex flex-column align-items-center justify-content-center">
+      <form className="search-container d-flex flex-column" onSubmit={handleSubmit}>
         <h1>Search</h1>
         <div className="form-floating mb-3">
           <input
@@ -45,7 +46,6 @@ function Search() {
         <button className="btn btn-primary btn-lg mb-3" type="submit" >
             Search
         </button>
-      </form>
       <div className="d-flex flex-column align-content-center">
       {loading === true && (
         <div className="d-flex justify-content-center m-3">
@@ -53,17 +53,17 @@ function Search() {
         </div>
       )}
       { searchPokemonList.name && loading === false && !error && (
-        <div className="d-flex flex-column align-items-center" key={searchPokemonList.id}>
-          <img className="search-image" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${searchPokemonList.id}.png`} alt={searchPokemonList.name}/>
-          <h1>{searchPokemonList.name}</h1>
-          <h2>{searchPokemonList.id}</h2>
-        </div>
+        <>
+          <MyPokemon myPokemon ={searchPokemonList} />
+          <button className="btn btn-primary" onClick={() => dispatch(addMyPokemon(searchPokemonList))}>add</button>
+        </>
         )}
         {error && (
           <h1>{error}</h1>
         )}
         <Link to='/' className="goBackButton btn btn-primary btn-lg" onClick={() => dispatch(eraseState())}>Back</Link>
       </div>
+      </form>
     </div>
   )
 }

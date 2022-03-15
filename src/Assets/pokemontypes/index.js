@@ -102,9 +102,15 @@ const types = {
     weak: ['ground', 'psych'],
     strong: ['grass', 'fairy']
   },
+  psychic:{
+    img: psych,
+    name: 'psychic',
+    weak: ['bug', 'ghost', 'dark'],
+    strong: ['fighting', 'poison']
+  },
   psych:{
     img: psych,
-    name: 'psych',
+    name: 'psychic',
     weak: ['bug', 'ghost', 'dark'],
     strong: ['fighting', 'poison']
   },

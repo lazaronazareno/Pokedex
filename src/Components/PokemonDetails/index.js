@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { addEnemyPokemon, addMyPokemon, eraseState, getTypeRelation, isLoading } from '../../Redux/reducers';
-import { Link } from 'react-router-dom';
+import { getDetails, addEnemyPokemon, addMyPokemon, eraseState, getTypeRelation, isLoading } from '../../Redux/reducers';
+import { Link,  useLocation  } from 'react-router-dom';
 import './styles.scss'
 import '../../Assets/color.scss'
 import pokemonType from '../../Assets/pokemontypes'
@@ -9,6 +9,8 @@ import Spinner from '../Spinner';
 
 function PokemonDetails() {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const id = location.pathname.replace(/[^0-9]/g,'')
 
   const pokemonDetails = useSelector(store => store.pokedex.pokemonDetails)
   const pokemonDescription = useSelector(store => store.pokedex.pokemonDescription)
@@ -27,10 +29,14 @@ function PokemonDetails() {
 
   useEffect(() => {
     dispatch(isLoading(true))
-    dispatch(getTypeRelation(pokemonDetails))
+    dispatch(getDetails(id))
+    if(pokemonDetails.name){
+      dispatch(isLoading(true))
+      dispatch(getTypeRelation(pokemonDetails))
+    }
     return;
 // eslint-disable-next-line
-  }, [pokemonDetails])
+  }, [])
 
 
 
@@ -39,9 +45,9 @@ function PokemonDetails() {
     { (loading === true) && (
       <Spinner />
   )}
-    { (pokemonDescription.color) && (loading === false) && (pokemonDetails.name) && (
+    { (pokemonDescription.color) && (pokemonDetails.name) && (
         <div className="pokemon-details bg-danger d-flex flex-column align-items-center">
-            <h1 h1 className="pokemon-name">{pokemonDetails.name} - #{pokemonDetails.id}</h1>
+            <h1 className="pokemon-name">{pokemonDetails.name} - #{pokemonDetails.id}</h1>
             <div className={`pokemon-infograph d-flex ${pokemonDescription.color.name}`}>
               <div className="d-flex flex-column">
                 {pokemonDetails.types.map((types) =>(
@@ -64,7 +70,7 @@ function PokemonDetails() {
                   {!pokemonWeak && ( <Spinner />)}
                   { pokemonWeak && (
                     pokemonWeak.map((types) =>(
-                      <img className="pokemon-type_img" src={pokemonType[types].img} alt={pokemonType[types].name}/>
+                      <img className="pokemon-type_img" src={pokemonType[types].img} key={pokemonType[types].name} alt={pokemonType[types].name}/>
                     ))
                   )}
                 </div>
@@ -74,7 +80,7 @@ function PokemonDetails() {
               <div className="pokemon-stats d-flex flex-column">
                 <h1>Base Stats</h1>
                 {pokemonDetails.stats.map((stats) =>(
-                  <div className="pokemon-meter d-flex justify-content-between">
+                  <div className="pokemon-meter d-flex justify-content-between" key={stats.stat.name}>
                     <span>{stats.stat.name} : {stats.base_stat}</span>
                     <meter                   
                     min="0" 

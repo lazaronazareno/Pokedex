@@ -23,6 +23,7 @@ function Battle() {
   const pokemonWeak = useSelector(store => store.pokedex.pokemonWeak)  
   const myStats = useSelector(store => store.pokedex.myPokemonStats)  
   const enemyStats = useSelector(store => store.pokedex.enemyPokemonStats)  
+  const loading = useSelector(store => store.pokedex.loading)  
   const error = useSelector(store => store.pokedex.error)  
   
   function strong() {
@@ -58,18 +59,20 @@ function Battle() {
     setShowHow(!showHow)
   }
 
-  let handleOpponent = () => {
+  function handleOpponent() {
     setButtonText('Fight')
     dispatch(isLoading(true))
     dispatch(addEnemyPokemon())
 }
 
   function fight() {
+    setIsStrong(false)
+    setIsWeak(false)
     setButtonText('Try Again')
-    dispatch(sumMyStats(myPokemon))
-    dispatch(sumEnemyStats(enemyPokemon))
     strong()
     lucky()
+    dispatch(sumMyStats(myPokemon))
+    dispatch(sumEnemyStats(enemyPokemon))
     if(isStrong && isLucky) {
       setResults('Your Pokemon type is favorable and got lucky!!!')
       let bonus = 140
@@ -97,24 +100,24 @@ function Battle() {
   }
 
   useEffect(() => {
-    if(enemyPokemon.name && myPokemon.name){
+    if(enemyPokemon.name){
       setIsStrong(false)
       setIsWeak(false)
-      dispatch(sumMyStats(myPokemon))
-      dispatch(sumEnemyStats(enemyPokemon))
       strong()
       lucky()
+      dispatch(sumMyStats(myPokemon))
+      dispatch(sumEnemyStats(enemyPokemon))
     }
     return;
   }, [enemyPokemon])
 
   return (
     <div>
-    { (myPokemon.name) && (!error) && (
+    { (myPokemon.name) && (error === null) && (
       <div className="battle-container">
         <div className="battle-pokemons d-flex justify-content-evenly">
           <div className="battle-mypokemon d-flex flex-column">
-            <MyPokemon />
+            <MyPokemon myPokemon={myPokemon} />
           </div>
           <h1 className="battle-vs align-self-center">VS</h1>
           <div className="battle-enemypokemon d-flex flex-column">
@@ -135,7 +138,8 @@ function Battle() {
                   <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div className="modal-body">
-                  <Fight
+                  <Fight 
+                    loading={loading}
                     results={results}
                     myStats={totalStats}
                     enemyStats={enemyStats}
@@ -160,16 +164,21 @@ function Battle() {
       </div>
       )}
       { (!myPokemon.name) && (
-        <>
-          <h1>There is nothing... you can fight when you choose your pokemon</h1>
-          <Link to="/pokedex" onClick={() => dispatch(eraseState())} className="btn btn-dark">Choose Pokemon</Link>
-        </>
+        <div className="battle-container-error">
+          <div className="battle-container-error__div">
+            <h1>There is nothing... you can fight when you choose your pokemon</h1>
+            <Link to="/pokedex" onClick={() => dispatch(eraseState())} className="btn btn-dark">Choose Pokemon</Link>
+            <Link to="/" onClick={() => dispatch(eraseState())} className="goBackButton btn btn-dark">Back</Link>
+          </div>
+        </div>
       )}
       {(error) && (
-        <>
-          <h1>{error}</h1>
-          <Link to="/" onClick={() => dispatch(eraseState())} className="btn btn-dark">Back</Link>
-        </>
+        <div className="battle-container-error">
+          <div className="battle-container-error__div">
+            <h1>{error}</h1>
+            <Link to="/" onClick={() => dispatch(eraseState())} className="btn btn-dark">Back</Link>
+          </div>
+        </div>
       )}
     </div>
   )

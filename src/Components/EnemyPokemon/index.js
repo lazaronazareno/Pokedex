@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom';
 import pokemonType from '../../Assets/pokemontypes'
-import Spinner from '../Spinner';
+import pokeball from '../../Assets/pokeball.png'
 
 function EnemyPokemon() {
   const enemyPokemon = useSelector(store => store.pokedex.enemyPokemon)
@@ -11,16 +11,18 @@ function EnemyPokemon() {
 
   return (
     <div>
-      {loading === true && (
-        <Spinner />
+      { loading === true && (
+        <div className="d-flex justify-content-center align-content-center">
+          <img src={pokeball} alt="pokeball" className="spinner-grow" role="status" />
+        </div>
       )}
       {error && (
-        <>
+        <div>
           <h1>{error}</h1>
           <Link to="/" className="btn btn-dark">Back</Link>
-        </>
+        </div>
       )}
-      {(!loading) && (!error) && (enemyPokemon.name) && (
+      { (loading === false) && (
         <div>
           <img className="my-pokemon-img" src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${enemyPokemon.id}.png`} alt={enemyPokemon.name}/>
           <h1 className="pokemon-name">{enemyPokemon.name}</h1>

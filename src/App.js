@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
+import { useSelector } from 'react-redux'
 import Battle from './Components/Battle';
 import Home from './Components/Home'
 import MyPokemon from './Components/myPokemon';
@@ -8,6 +9,8 @@ import PokemonList from './Components/PokemonList';
 import Search from './Components/Search';
 
 function App() {
+  const myPokemon = useSelector(store => store.pokedex.myPokemon)
+
   return (
     <div className="App bg-danger">
         <BrowserRouter>
@@ -16,7 +19,7 @@ function App() {
             <Route exact path="/pokedex" element={<PokemonList />} />
             <Route exact path="/details/:id" element={<PokemonDetails />} />
             <Route exact path="/search" element={<Search />} />
-            <Route exact path="/myPokemon" element={<MyPokemon />} />
+            <Route exact path="/myPokemon" element={<MyPokemon myPokemon={myPokemon} />} />
             <Route exact path="/fight" element={<Battle />} />
           </Routes>
         </BrowserRouter>
